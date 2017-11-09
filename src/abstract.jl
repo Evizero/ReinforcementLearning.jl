@@ -31,16 +31,11 @@ functions: [`actions`](@ref), [`step!`](@ref), [`reset!`](@ref),
 abstract type Environment end
 
 """
-    step!([rng], env::Environment, a) -> (s´, r)
+    step!(env::Environment, a) -> (s´, r)
 
 Apply the given action `a` to the current state of the
 environment `env` and return the next state `s´` as well as the
 received award `r` caused by this transition.
-
-Optionally a user can provide a custom random number generator
-`rng`. If for example the given `env` is a simulator that needs
-to generate random numbers for some reason, it will do so using
-the given `rng`.
 
 Note that this function does not expect the user to provide a
 state. This is because the environment is in general expected to
@@ -53,23 +48,16 @@ looking at the last 5 screens. Yet for Atari games it is still a
 fair assumption that the last 5 screens correspond to a unique
 game state.
 """
-step!(env::Environment, args...) =
-    step!(Base.GLOBAL_RNG, env, args...)
+function step! end
 
 """
-    reset!([rng], env::Environment, [...]) -> s₀
+    reset!(env::Environment, [...]) -> s₀
 
 Reset the given environment to an initial state and return it.
 Note that individual environment may support additional
 parameters.
-
-Optionally a user can provide a custom random number generator
-`rng`. If for example the given `env` is a simulator that needs
-to generate random numbers for some reason, it will do so using
-the given `rng`.
 """
-reset!(env::Environment, args...) =
-    reset!(Base.GLOBAL_RNG, env, args...)
+function reset! end
 
 """
     isterminal(env::Environment) -> Bool

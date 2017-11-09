@@ -20,6 +20,7 @@ function DiscretizedEnvironment(
 end
 
 discount(env::DiscretizedEnvironment) = discount(env.env)
+isterminal(env::DiscretizedEnvironment) = isterminal(env.env)
 
 state_index(env::DiscretizedEnvironment, s) = sub2ind(env.dims, s...)
 n_states(env::DiscretizedEnvironment) = prod(env.dims)
@@ -33,12 +34,12 @@ function Base.show(io::IO, env::DiscretizedEnvironment)
     print(io, typeof(env).name)
 end
 
-function step!(rng, env::DiscretizedEnvironment{N}, a) where N
-    s, r = step!(rng, env.env, a)
+function step!(env::DiscretizedEnvironment{N}, a) where N
+    s, r = step!(env.env, a)
     ntuple(i->encode(env.discretizers[i], s[i]), Val{N}), r
 end
 
-function reset!(rng, env::DiscretizedEnvironment{N}, args...) where N
-    s = reset!(rng, env.env, args...)
+function reset!(env::DiscretizedEnvironment{N}, args...) where N
+    s = reset!(env.env, args...)
     ntuple(i->encode(env.discretizers[i], s[i]), Val{N})
 end
