@@ -30,12 +30,12 @@ action_index(env::DiscretizedEnvironment, a) = action_index(env.env, a)
 n_actions(env::DiscretizedEnvironment) = n_actions(env.env)
 
 function Base.show(io::IO, env::DiscretizedEnvironment)
-    # TODO: show something sensible
-    print(io, typeof(env).name)
+    print(io, n_states(env), "-state discretized ")
+    Base.show(io, env.env)
 end
 
-function step!(env::DiscretizedEnvironment{N}, a) where N
-    s, r = step!(env.env, a)
+function step!(env::DiscretizedEnvironment{N}, args...) where N
+    s, r = step!(env.env, args...)
     ntuple(i->encode(env.discretizers[i], s[i]), Val{N}), r
 end
 
